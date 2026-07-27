@@ -1,0 +1,91 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Notes</title>
+
+    <link rel="stylesheet" href="{% static 'notes/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📝 AI Notes</h1>
+    <p class="subtitle">Save your ideas and summarize them with AI.</p>
+
+    <div class="note-form">
+
+        <h2>Add New Note</h2>
+
+        <form method="POST">
+             {% csrf_token %}
+
+             {{ form.title }}
+             {{ form.content }}
+
+            <button type="submit">
+    {% if editing %}
+        Update Note
+    {% else %}
+        Save Note
+    {% endif %}
+</button>
+        </form>
+
+    </div>
+
+    <div class="notes">
+
+        <h2>Your Notes</h2>
+
+      {% for note in notes %}
+
+        <div class="card">
+
+            <h3>{{ note.title }}</h3>
+
+            <p>{{ note.content }}</p>
+  
+
+           {% if note.action_items %}
+            <div class="action-items">
+              <h4>Action Items</h4>
+              <pre>{{ note.action_items }}</pre>
+            </div>
+           {% endif %}
+
+            <div class="buttons">
+              <a href="{% url 'extract_action_items' note.id %}">
+        <button type="button">
+            Extract Action Items
+        </button>
+    </a>
+                  <a href="{% url 'edit_note' note.id %}">
+        <button type="button">Edit</button>
+    </a>
+              <a href="{% url 'delete_note' note.id %}">
+    <button>Delete</button>
+</a>
+            </div>
+
+        </div>
+
+      {% empty %}
+
+      <p>No notes yet.</p>
+      
+
+    {% endfor %}
+
+
+    
+
+ </div>
+
+</div>
+
+</body>
+</html>
